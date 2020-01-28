@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<!--
+	Prologue by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Welcome to OnBoardClientel</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/toastr.min.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<div id="header">
+
+				<div class="top">
+
+					<!-- Logo -->
+						<div id="logo">
+							<span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span>
+							<h1 id="title">OnBoardClientel</h1>
+							<p>Onboarding & Compliance</p>
+						</div>
+
+					<!-- Nav -->
+						<nav id="nav">
+							<ul>
+								<li><a href="#top" id="top-link"><span class="icon solid fa-home">Home</span></a></li>
+								<!-- <li><a href="#portfolio" id="portfolio-link"><span class="icon solid fa-th">Portfolio</span></a></li>
+								<li><a href="#about" id="about-link"><span class="icon solid fa-user">About Me</span></a></li> -->
+								<li><a href="#contact" id="contact-link"><span class="icon solid fa-envelope">Register</span></a></li>
+							</ul>
+						</nav>
+
+				</div>
+
+				<div class="bottom">
+
+					<!-- Social Icons -->
+						<ul class="icons">
+							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+							<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
+							<li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+						</ul>
+
+				</div>
+
+			</div>
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- Intro -->
+					<section id="top" class="one dark cover">
+						<div class="container">
+							<header>
+								<h2 class="alt">Welcome to OnBoardClientel!</h2>
+							</header>
+						</div>
+					</section>
+
+				<!-- Portfolio -->
+					<section id="portfolio" class="two">
+						<div class="container">
+
+							<header>
+								<h2>Clients</h2>
+							</header>
+
+							<table>
+								<thead>
+									<tr>
+										<th>Client Name</th>
+										<th>Industry</th>
+										<th>Url</th>
+										<th>Documents?</th>
+										<th>Emailed?</th>
+										<th>Reviewed?</th>
+										<!-- <th>Time</th> -->
+										<th>Check Status</th>
+									</tr>
+								</thead>
+								<tbody id="clientRows">
+									<!-- <tr>
+										<td>Microsoft Corporation</td>
+										<td>Technology</td>
+										<td><a href="www.microsoft.com" target="_blank">www.microsoft.com</a></td>
+										<td class="text-center"><span class="icon solid green fa-check-circle"></span></td>
+										<td class="text-center"><span class="icon solid green fa-check-circle"></span></td class="text-center"></td>
+										<td class="text-center"><span class="icon solid green fa-check-circle"></span></td class="text-center"></td>
+									
+										<td></td>
+									</tr>
+									<tr>
+										<td>PwC</td>
+										<td>Financial</td>
+										<td><a href="www.pwc.com" target="_blank">www.pwc.com</a></td>
+										<td class="text-center"><span class="icon solid green fa-check-circle"></span></td class="text-center"></td>
+										<td class="text-center"><span class="icon solid red fa-times-circle"></span></td class="text-center"></td>
+										<td class="text-center"><span class="icon solid red fa-times-circle"></span></td class="text-center"></td>
+										
+										<td></td>
+									</tr> -->
+								</tbody>
+							</table>
+
+						</div>
+					</section>
+
+
+				<!-- Contact -->
+					<section id="contact" class="four">
+						<div class="container">
+
+							<header>
+								<h2>On board New Client</h2>
+							</header>
+
+							<div class="form">
+								<div class="row">
+									<div class="col-6">
+										<div class="col-12">
+											<label>Client Name</label>
+											<input type="text" id="clientName" />
+										</div>
+										<div class="col-12">
+											<label>Industry</label>
+											<select id="clientIndustry">
+												<option>--Select--</option>
+												<option>Financial</option>
+												<option>Transportation</option>
+												<option>Retail</option>
+												<option>Non-Profit</option>
+												<option>Technology</option>
+												<option>Arts & Music</option>
+												<option>Education</option>
+												<option>Other</option>
+											</select>
+										</div>
+										<div class="col-12">
+											<label>Url</label>
+											<input type="text" id="clientUrl"  />
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="col-12">
+											<label>Comments</label>
+											<textarea id="clientComment"></textarea>
+										</div>
+									</div>
+									
+									<div class="col-12">
+										<input type="button" id="submitBtn" value="Register Client" />
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Footer -->
+			<div id="footer">
+
+				<!-- Copyright -->
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+
+			</div>
+			<div id="veil" style="background-image: url(/images/loading-screen.gif); display: none"></div>
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script src="assets/js/toastr.min.js"></script>
+
+	</body>
+</html>
