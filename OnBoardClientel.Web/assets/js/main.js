@@ -125,12 +125,13 @@
 	//GET CLIENTS
 	$('#veil').show();
 	$.get(api_url + "GetClients", function(data){
-		console.log(data);
+		var isPlainAzureFunction  = (getQueryStrings().length == 0);
+		console.log((isPlainAzureFunction ? "plain azure function" : "durable function"))
 		toastr.info('Successfully loaded client data')
 		$.each(data, function(index, client){
 			$('#clientRows').append(
 				"<tr>" +
-				"<td>"+ client.name+"</td>" +
+				"<td>" + ( client.documentUrl === null ? client.name : "<a target='_blank' href='" + client.documentUrl + "'>" + client.name + "</a>") +"</td>" +
 				"<td>"+ client.industry+"</td>" +
 				"<td><a href='"+ client.url+"' target='_blank'>"+ client.url+"</a></td>" +
 				"<td class='text-center'><span class='icon solid " + (client.documentGenerated === null ? "red fa-times-circle" :"green fa-check-circle") +"'></span></td>" +
@@ -147,6 +148,22 @@
 	});	
 
 
+	// Read a page's GET URL variables and return them as an associative array.
+	function getQueryStrings()
+	{
+		var vars = [], hash;
+		if(window.location.href.indexOf('?') == -1)
+			return vars;
+			
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		return vars;
+	}
 	//POST CLIENT
 
 	$('#submitBtn').click(function(){
@@ -159,9 +176,12 @@
 			url : $('#clientUrl').val(),
 			comment : $('#clientComment').val()
 		};
+		var qStrings = getQueryStrings();
+		var isPlainAzureFunction  = (qStrings.length == 0);
+		console.log((isPlainAzureFunction ? "plain azure function" : "durable function"))
 		$.ajax({
 			type: 'POST',
-			url: api_url + "RegisterClient",
+			url: api_url + (isPlainAzureFunction ? "RegisterClient" : "NewClient"),
 			data: JSON.stringify(client),
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
@@ -173,16 +193,18 @@
 				$('#clientUrl').val('');
 				$('#clientComment').val('');
 
-				$('#clientRows').append(
-					"<tr>" +
-					"<td>"+ data.name+"</td>" +
-					"<td>"+ data.industry+"</td>" +
-					"<td><a href='"+ data.url+"' target='_blank'>"+ data.url+"</a></td>" +
-					"<td class='text-center'><span class='icon solid " + (data.documentGenerated === null ? "red fa-times-circle" :"green fa-check-circle") +"'></span></td>" +
-					"<td class='text-center'><span class='icon solid " + (data.emailSent === null ? "red fa-times-circle" :"green fa-check-circle") +"'></span></td>" +
-					"<td class='text-center'><span class='icon solid " + (data.documentReviewed === null ? "red fa-times-circle" :"green fa-check-circle") +"'></span></td>" +
-					"<td></td>" +
-					"</tr>");
+				if(isPlainAzureFunction){
+					$('#clientRows').append(
+						"<tr>" +
+						"<td>"+ data.name+"</td>" +
+						"<td>"+ data.industry+"</td>" +
+						"<td><a href='"+ data.url+"' target='_blank'>"+ data.url+"</a></td>" +
+						"<td class='text-center'><span class='icon solid " + (data.documentGenerated === null ? "red fa-times-circle" :"green fa-check-circle") +"'></span></td>" +
+						"<td class='text-center'><span class='icon solid " + (data.emailSent === null ? "red fa-times-circle" :"green fa-check-circle") +"'></span></td>" +
+						"<td class='text-center'><span class='icon solid " + (data.documentReviewed === null ? "red fa-times-circle" :"green fa-check-circle") +"'></span></td>" +
+						"<td></td>" +
+						"</tr>");
+				}
 				$("#veil").hide();
 				toastr.success('Client successfully saved');
 				
