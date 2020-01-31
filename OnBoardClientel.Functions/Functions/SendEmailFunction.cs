@@ -72,7 +72,7 @@ namespace OnBoardClientel.Functions.Functions
                 "<p> If you have any questions, please feel free to contact our call x1234 and our customer representatives" +
                 " will be able to help. <br />" +
                 "Sincerely, <br/ > <br/>" +
-                "Your Onboarding & Compliance Advisor" +
+                "Your Onboarding & Compliance Advisor <br/>" +
                 "OnboardingClient.com </p>";
         }
     }

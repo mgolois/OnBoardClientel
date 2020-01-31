@@ -19,15 +19,17 @@ namespace OnBoardClientel.Functions.Functions
 {
     public class RegistrationDurableFunction
     {
-        private OnBoardClientelContext dbContext;
-        private HttpClient httpClient;
+        private readonly OnBoardClientelContext dbContext;
+        private readonly HttpClient httpClient;
+
         public RegistrationDurableFunction(OnBoardClientelContext onBoardClientelContext, IHttpClientFactory httpClientFactory)
         {
             dbContext = onBoardClientelContext;
             httpClient = httpClientFactory.CreateClient();
         }
 
-        [FunctionName("StartRegistration")]
+
+        [FunctionName("NewClient")]
         public async Task<HttpResponseMessage> StartRegistration(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequestMessage req,
             [OrchestrationClient]DurableOrchestrationClient starter, ILogger log)
@@ -38,19 +40,11 @@ namespace OnBoardClientel.Functions.Functions
                 var content = await req.Content.ReadAsStringAsync();
                 var client = JsonConvert.DeserializeObject<Client>(content);
 
-
-
                 //send message to queue
                 string instanceId = await starter.StartNewAsync("ProcessNewClient", client);
-
                 log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
 
-                //just for demo
-                client.DurableFunctionUrl = instanceId;
-                await dbContext.SaveChangesAsync();
-
                 return starter.CreateCheckStatusResponse(req, instanceId);
-
             }
             catch (Exception ex)
             {
@@ -61,34 +55,21 @@ namespace OnBoardClientel.Functions.Functions
 
 
         [FunctionName("ProcessNewClient")]
-        public async Task NewClientOrchestrator(
-            [OrchestrationTrigger] DurableOrchestrationContext context)
+        public async Task NewClientOrchestrator([OrchestrationTrigger] DurableOrchestrationContext context)
         {
-
             var client = context.GetInput<Client>();
-            try
-            {
-                //save client
-                client = await context.CallActivityAsync<Client>("SaveClient", client);
+            client.DurableFunctionUrl = context.InstanceId;
 
-                //generate documents
-                client = await context.CallActivityAsync<Client>("GenerateClientDocument", client);
+            //save client
+            client = await context.CallActivityAsync<Client>("SaveClient", client);
 
-                //sendEmail
-                await context.CallActivityAsync("SendClientEmail", client);
+            //generate documents
+            client = await context.CallActivityAsync<Client>("GenerateClientDocument", client);
 
-            }
-            catch (Exception ex)
-            {
-                //TODO
-                throw ex;
-            }
-            finally
-            {
-                dbContext.Clients.Update(client);
-                await dbContext.SaveChangesAsync();
-            }
+            //send Email
+            await context.CallActivityAsync("SendClientEmail", client);
         }
+
 
         [FunctionName("SaveClient")]
         public async Task<Client> SaveClientToDatabase([ActivityTrigger] Client client)
@@ -100,9 +81,10 @@ namespace OnBoardClientel.Functions.Functions
             return client;
         }
 
+
         [FunctionName("GenerateClientDocument")]
         public async Task<Client> GenerateClientDocument([ActivityTrigger] Client client, ILogger log,
-            [Blob("clients/{rand-guid}.txt", FileAccess.ReadWrite, Connection = "AzureStorageConnectionString")] CloudBlockBlob blob)
+            [Blob("clients1/{rand-guid}.txt", FileAccess.ReadWrite, Connection = "AzureStorageConnectionString")] CloudBlockBlob blob)
         {
 
             var response = await httpClient.GetAsync(client.Url);
@@ -114,7 +96,7 @@ namespace OnBoardClientel.Functions.Functions
             await blob.UploadFromByteArrayAsync(bytes, 0, bytes.Length);
 
             client.DocumentUrl = blob.Uri.ToString();
-            client.DocumentReviewed = DateTime.Now;
+            client.DocumentGenerated = DateTime.Now;
 
             dbContext.Clients.Update(client);
             await dbContext.SaveChangesAsync();
@@ -149,6 +131,7 @@ namespace OnBoardClientel.Functions.Functions
             return message;
         }
 
+
         private string EmailContent(Client client)
         {
             return "<h2>OnBoardingClientel - Welcome & Confirmation email </h2>" +
@@ -169,7 +152,7 @@ namespace OnBoardClientel.Functions.Functions
                 "<p> If you have any questions, please feel free to contact our call x1234 and our customer representatives" +
                 " will be able to help. <br />" +
                 "Sincerely, <br/ > <br/>" +
-                "Your Onboarding & Compliance Advisor" +
+                "Your Onboarding & Compliance Advisor <br/>" +
                 "OnboardingClient.com </p>";
         }
     }

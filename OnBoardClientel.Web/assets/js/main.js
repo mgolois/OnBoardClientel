@@ -121,6 +121,7 @@
 				});
 		
 	var api_url = "https://onboardingclientel.azurewebsites.net/api/"	
+	//var api_url = "http://localhost:7071/api/"	
 
 	//GET CLIENTS
 	$('#veil').show();
@@ -154,7 +155,7 @@
 		var vars = [], hash;
 		if(window.location.href.indexOf('?') == -1)
 			return vars;
-			
+
 		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
 		for(var i = 0; i < hashes.length; i++)
 		{
@@ -187,6 +188,7 @@
 			dataType: 'json',
 			success: function (data) {
 				
+				console.log(data);
 				//Clear input
 				$('#clientName').val('');
 				$('#clientIndustry').val('');
