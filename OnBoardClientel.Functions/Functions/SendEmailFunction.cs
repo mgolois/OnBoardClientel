@@ -24,7 +24,7 @@ namespace OnBoardClientel.Functions.Functions
         [FunctionName("SendEmail")]
         public void SendConfirmationEmail([BlobTrigger("clients/{name}", Connection = "AzureStorageConnectionString")]Stream stream,
             string name, ILogger log,
-            [SendGrid(To = "golois.mouelet@microsoft.com", From = "golois.mouelet@microsoft.com")] out SendGridMessage message)
+            [SendGrid(To = "email@address.com", From = "email@address.com")] out SendGridMessage message)
         {
 
             var client = dbContext.Clients.FirstOrDefault(c => c.DocumentUrl.Contains(name));
