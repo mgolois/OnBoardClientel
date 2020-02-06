@@ -40,7 +40,7 @@ namespace OnBoardClientel.Functions.Functions
                 var content = await req.Content.ReadAsStringAsync();
                 var client = JsonConvert.DeserializeObject<Client>(content);
 
-                //send message to queue
+               
                 string instanceId = await starter.StartNewAsync("ProcessNewClient", client);
                 log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
 
