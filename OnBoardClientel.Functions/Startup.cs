@@ -17,7 +17,6 @@ namespace OnBoardClientel.Functions
         public override void Configure(IFunctionsHostBuilder builder)
         {
             builder.Services.AddHttpClient();
-            builder.Services.AddSingleton<IQueueSender, ServiceBusQueueSender>();
             builder.Services.AddDbContext<OnBoardClientelContext>(option =>
                                 option.UseSqlServer(Environment.GetEnvironmentVariable("SqlConnectionString")));
         }

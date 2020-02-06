@@ -9,17 +9,17 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OnBoardClientel.Functions.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Azure.WebJobs.ServiceBus;
+using Microsoft.WindowsAzure.Storage.Queue.Protocol;
 
 namespace OnBoardClientel.Functions.Functions
 {
     public class RegistrationFunction
     {
         private OnBoardClientelContext dbContext;
-        private IQueueSender queueSender;
-        public RegistrationFunction(OnBoardClientelContext onBoardClientelContext, IQueueSender sender)
+        public RegistrationFunction(OnBoardClientelContext onBoardClientelContext)
         {
             dbContext = onBoardClientelContext;
-            queueSender = sender;
         }
 
 
@@ -27,8 +27,8 @@ namespace OnBoardClientel.Functions.Functions
         /// Saves new client in database and sends newly created client to queue
         /// </summary>
         [FunctionName("RegisterClient")]
-        public async Task<IActionResult> Post([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
-                                                            ILogger log)
+        public async Task<IActionResult> Post([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,ILogger log,
+            [ServiceBus("%ServiceBusQueueName%", Connection = "ServiceBusConnectionString", EntityType = EntityType.Queue)] ICollector<string> messages)
         {
             try
             {
@@ -41,8 +41,7 @@ namespace OnBoardClientel.Functions.Functions
                 dbContext.Clients.Add(client);
                 await dbContext.SaveChangesAsync();
 
-                //send message to queue
-                await queueSender.SendMessage(client);
+                messages.Add(JsonConvert.SerializeObject(client));
 
                 return new OkObjectResult(client);
             }

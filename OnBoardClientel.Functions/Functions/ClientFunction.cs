@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OnBoardClientel.Functions.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Azure.WebJobs.ServiceBus;
 
 namespace OnBoardClientel.Functions.Functions
 {
@@ -21,8 +22,7 @@ namespace OnBoardClientel.Functions.Functions
         }
 
         [FunctionName("GetClients")]
-        public async Task<IActionResult> Get([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-                                                            ILogger log)
+        public async Task<IActionResult> Get([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,ILogger log)
         {
             try
             {
